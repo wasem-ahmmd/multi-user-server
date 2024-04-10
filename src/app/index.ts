@@ -10,7 +10,10 @@ import JWTService from "../services/jwt";
 export const initServer = async () => {
   const app = express();
   app.use(bodyParser.json());
-  app.use(cors());
+  app.use(cors({
+    origin: "*",
+    credentials: true,
+  }));
   const server = new ApolloServer<GraphqlContext>({
     typeDefs: `
         ${User.typeDefs}

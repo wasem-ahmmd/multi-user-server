@@ -1,15 +1,12 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "app.ts",
-        "use": "@now/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "app.ts"
-      }
-    ]
+  "version": 2,
+  "builds": [
+    { "src": "src/*.ts", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "src/$1.ts" }
+  ],
+  "env": {
+    "PORT":"8080"
   }
+}

@@ -1,5 +1,8 @@
 import { GraphqlContext } from "../../intefaces";
-import UserService, { createUserPayload } from "../../services/user";
+import UserService, { createUserPayload, updateUserPayload } from "../../services/user";
+
+
+
 
 const queries = {
   verifyGoogleToken: async (parent: any, { token }: { token: string }) => {
@@ -30,6 +33,10 @@ const mutations = {
     const res = await UserService.createUser(payload);
     return res;
   },
+  updateUserSetting: async (parent: any, payload: updateUserPayload) => {
+    const res = await UserService.updateUserSetting(payload);
+    return res.id
+  }
 };
 
 export const resolvers = { queries, mutations };

@@ -2,6 +2,7 @@ import { prisma } from "../clients/db";
 import * as bcrypt from "bcrypt";
 import axios from "axios";
 import JWTService from "./jwt";
+import { Prisma } from "@prisma/client";
 
 const saltRounds = 10;
 
@@ -10,6 +11,14 @@ export interface createUserPayload {
   lastName?: string;
   email: string;
   password: string;
+}
+
+export interface updateUserPayload {
+  userId: string;
+  lastName?: string;
+  bio?: string;
+  gender?: string;
+  relationship?: string;
 }
 interface GoogleTokenResult {
   iss?: string;
@@ -102,6 +111,26 @@ class UserService {
     });
     const token = JWTService.generateTokenForUser(newUser);
     return token 
+  }
+
+  public static async updateUserSetting(payload: updateUserPayload){
+    const {userId,lastName,bio,gender,relationship} = payload;
+    try {
+      return await prisma.user.update({
+        where: { id: userId },
+        data: {
+          lastName,
+          bio,
+          gender,
+          relationship
+        } as Prisma.UserUpdateInput
+      })
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+        throw new Error('Failed to update user profile');
+    }
+    
+
   }
 
   private static getUserByEmail(email: string){

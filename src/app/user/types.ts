@@ -6,12 +6,24 @@ export const typeDefs = `#graphql
         email: String!
         password: String!
     }
+    input createUserSetting {
+        userId: String!
+        lastName: String
+        bio: String
+        gender: String
+        relationship: String
+    }
+
     type User {
         id : ID!
         firstName: String!
         lastName: String
         email: String!
+        bio: String
+        gender: String
+        relationship: String
         avatar: String
         # password: String!
     }
+    
 `

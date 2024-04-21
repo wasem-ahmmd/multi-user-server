@@ -7,13 +7,15 @@ import { User } from "./user";
 import { GraphqlContext } from "../intefaces";
 import JWTService from "../services/jwt";
 
+
+// {
+//   origin: "http://localhost:3000/",
+//   credentials: true,
+// }
 export const initServer = async () => {
   const app = express();
   app.use(bodyParser.json());
-  app.use(cors({
-    origin: "http://localhost:3000/",
-    credentials: true,
-  }));
+  app.use(cors());
   const server = new ApolloServer<GraphqlContext>({
     typeDefs: `
         ${User.typeDefs}

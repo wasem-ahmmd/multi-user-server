@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "src/*.ts", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/graphql", "dest": "src/app/index.ts" }
+  ],
+  "env": {
+    "PORT":"8080"
+  }
+}

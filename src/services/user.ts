@@ -116,14 +116,22 @@ class UserService {
   public static async updateUserSetting(payload: updateUserPayload){
     const {userId,lastName,bio,gender,relationship} = payload;
     try {
+      const existingUserData = await prisma.user.findUnique({
+        where: { id: userId }
+    });
+    if (!existingUserData) {
+      throw new Error('User not found.');
+  }
+    const updatedUserData = {
+      ...existingUserData,
+      lastName: lastName !== undefined ? lastName : existingUserData.lastName,
+      bio: bio !== undefined ? bio : existingUserData.bio,
+      gender: gender !== undefined ? gender : existingUserData.gender,
+      relationship: relationship !== undefined ? relationship : existingUserData.relationship
+  };
       return await prisma.user.update({
         where: { id: userId },
-        data: {
-          lastName,
-          bio,
-          gender,
-          relationship
-        } as Prisma.UserUpdateInput
+        data: updatedUserData as Prisma.UserUpdateInput
       })
     } catch (error) {
       console.error('Error updating user profile:', error);

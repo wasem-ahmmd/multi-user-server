@@ -7,7 +7,6 @@ import { User } from "./user";
 import { GraphqlContext } from "../intefaces";
 import JWTService from "../services/jwt";
 
-
 // {
 //   origin: "http://localhost:3000/",
 //   credentials: true,
@@ -16,6 +15,10 @@ export const initServer = async () => {
   const app = express();
   app.use(bodyParser.json());
   app.use(cors());
+
+  app.get("/", (req, res) =>
+    res.status(200).json({ message: "EveryThing Is Good" })
+  );
   const server = new ApolloServer<GraphqlContext>({
     typeDefs: `
         ${User.typeDefs}
@@ -36,16 +39,19 @@ export const initServer = async () => {
     },
   });
   await server.start();
-  app.use("/graphql", expressMiddleware(server, {
-    context: async ({ req, res }) => {
-      return {
-        user: req.headers.authorization
-          ? JWTService.decodeToken(
-              req.headers.authorization.split("Bearer ")[1]
-            )
-          : undefined,
-      };
-    },
-  }));
+  app.use(
+    "/graphql",
+    expressMiddleware(server, {
+      context: async ({ req, res }) => {
+        return {
+          user: req.headers.authorization
+            ? JWTService.decodeToken(
+                req.headers.authorization.split("Bearer ")[1]
+              )
+            : undefined,
+        };
+      },
+    })
+  );
   return app;
 };

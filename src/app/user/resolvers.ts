@@ -1,5 +1,5 @@
 import { GraphqlContext } from "../../intefaces";
-import UserService, { createUserPayload, updateUserPayload } from "../../services/user";
+import UserService, { createUserPayload, updateUserPasswordPayload, updateUserPayload } from "../../services/user";
 
 
 
@@ -36,7 +36,12 @@ const mutations = {
   updateUserSetting: async (parent: any, payload: updateUserPayload) => {
     const res = await UserService.updateUserSetting(payload);
     return res.id
+  },
+  UpdateUserPassword:async (parent: any, payload: updateUserPasswordPayload) => {
+    const res = await UserService.UpdateUserPassword(payload);
+    return res.id
   }
+
 };
 
 export const resolvers = { queries, mutations };

@@ -13,6 +13,11 @@ export const typeDefs = `#graphql
         gender: String
         relationship: String
     }
+    input updateUserPassword{
+        userId: String!
+        currentpassword: String!
+        newpassword:String!
+    }
 
     type User {
         id : ID!
@@ -23,6 +28,7 @@ export const typeDefs = `#graphql
         gender: String
         relationship: String
         avatar: String
+        
         # password: String!
     }
     

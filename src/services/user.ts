@@ -19,6 +19,13 @@ export interface updateUserPayload {
   bio?: string;
   gender?: string;
   relationship?: string;
+  
+}
+
+export interface updateUserPasswordPayload{
+  userId: string;
+  currentpassword: string;
+  newpassword: string
 }
 interface GoogleTokenResult {
   iss?: string;
@@ -122,13 +129,15 @@ class UserService {
     if (!existingUserData) {
       throw new Error('User not found.');
   }
+     
     const updatedUserData = {
       ...existingUserData,
       lastName: lastName !== undefined ? lastName : existingUserData.lastName,
       bio: bio !== undefined ? bio : existingUserData.bio,
       gender: gender !== undefined ? gender : existingUserData.gender,
-      relationship: relationship !== undefined ? relationship : existingUserData.relationship
+      relationship: relationship !== undefined ? relationship : existingUserData.relationship,
   };
+  
       return await prisma.user.update({
         where: { id: userId },
         data: updatedUserData as Prisma.UserUpdateInput
@@ -139,6 +148,21 @@ class UserService {
     }
     
 
+  }
+  
+  public static async UpdateUserPassword(payload: updateUserPasswordPayload){
+    const {userId,currentpassword,newpassword } = payload
+    const user = await UserService.getUserById(userId)
+    if(!user) throw new Error('User not found.');
+    const compareUserPass = await UserService.compereHashPass(currentpassword,user.password)
+    if(!compareUserPass) throw new Error('Incorrect Current Password');
+    const hashUserPasword = await UserService.generateHashPass(newpassword,saltRounds)
+    return await prisma.user.update({
+      where: { id: user.id },
+      data: {
+         password: hashUserPasword
+      } as Prisma.UserUpdateInput
+    })
   }
 
   private static getUserByEmail(email: string){
